@@ -19,12 +19,18 @@
         }
         #splash-screen.hidden {
             opacity: 0;
-            pointer-events: none; /* Mencegah interaksi setelah disembunyikan */
+            pointer-events: none;
         }
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
+            gap: 8px; /* Jarak antar tanggal */
+        }
+        /* Media query untuk layar kecil */
+        @media (max-width: 400px) {
+            .calendar-grid {
+                gap: 4px; /* Jarak dibuat lebih kecil di layar sempit */
+            }
         }
         .calendar-day {
             transition: all 0.2s ease-in-out;
@@ -61,7 +67,6 @@
             from { opacity: 0; transform: scale(0.8); }
             to { opacity: 1; transform: scale(1); }
         }
-        /* Focus screen style */
         #focus-mode-screen {
             background: rgba(16, 185, 129, 0.95);
             backdrop-filter: blur(10px);
@@ -79,14 +84,12 @@
     </div>
 
     <div class="container mx-auto p-4 max-w-4xl">
-        <!-- Header -->
         <header class="text-center mb-6">
             <h1 class="text-4xl font-bold text-green-600">Jadwalin ✨</h1>
             <p class="text-gray-500 mt-1">Atur harimu, capai tujuanmu!</p>
         </header>
 
-        <!-- Calendar Section -->
-        <div class="bg-white p-6 rounded-2xl shadow-lg">
+        <div class="bg-white p-4 sm:p-6 rounded-2xl shadow-lg">
             <div class="flex justify-between items-center mb-4">
                 <button id="prev-month" class="p-2 rounded-full hover:bg-gray-100 transition-colors">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
@@ -96,14 +99,14 @@
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
-            <div class="grid grid-cols-7 gap-2 text-center font-semibold text-sm text-gray-500 mb-2">
+            <div class="grid grid-cols-7 gap-2 text-center font-semibold text-xs sm:text-sm text-gray-500 mb-2">
                 <div>Min</div><div>Sen</div><div>Sel</div><div>Rab</div><div>Kam</div><div>Jum</div><div>Sab</div>
             </div>
             <div id="calendar-body" class="calendar-grid"></div>
         </div>
     </div>
 
-    <!-- Daily Details Modal -->
+    <!-- Daily Details Modal and other modals... (HTML content is identical to the previous correct version) -->
     <div id="details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
             <div class="p-4 border-b flex justify-between items-center">
@@ -115,16 +118,13 @@
                     </button>
                 </div>
             </div>
-            
             <div class="border-b">
                 <div class="flex justify-around p-2">
                     <button data-tab="jadwal" class="tab-button flex-1 py-2 text-center text-gray-500 border-b-2 border-transparent transition-colors">Jadwal Saya</button>
                     <button data-tab="pengeluaran" class="tab-button flex-1 py-2 text-center text-gray-500 border-b-2 border-transparent transition-colors">Pengeluaran</button>
                 </div>
             </div>
-
             <div class="overflow-y-auto p-5 flex-grow">
-                <!-- Schedule Tab -->
                 <div id="jadwal-content" class="tab-content">
                     <form id="add-schedule-form" class="flex gap-2 mb-4">
                         <input type="time" id="schedule-time" class="w-1/3 p-2 border rounded-lg focus:ring-2 focus:ring-green-400" required>
@@ -133,8 +133,6 @@
                     </form>
                     <ul id="schedule-list" class="space-y-2"></ul>
                 </div>
-
-                <!-- Expenses Tab -->
                 <div id="pengeluaran-content" class="tab-content hidden">
                     <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <label for="daily-limit" class="block text-sm font-medium text-yellow-800 mb-1">Batas Pengeluaran Harian (Rp)</label>
@@ -151,8 +149,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Alarm Modal -->
     <div id="alarm-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[60] hidden">
         <div class="motivational-popup bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
             <div class="text-5xl mb-4 animate-bounce">⏰</div>
@@ -165,8 +161,6 @@
             </div>
         </div>
     </div>
-    
-    <!-- Snooze Prompt Modal -->
     <div id="snooze-prompt-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[70] hidden">
          <div class="popup-content bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
             <h3 class="text-xl font-bold mb-4">Tunda berapa menit?</h3>
@@ -174,15 +168,11 @@
             <button id="snooze-confirm" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-transform transform hover:scale-105">OK, ingatkan lagi nanti</button>
          </div>
     </div>
-
-    <!-- Motivational Message Popup -->
     <div id="motivational-popup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[100] hidden">
         <div class="motivational-popup bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
             <p id="motivational-text" class="text-xl font-semibold text-gray-700"></p>
         </div>
     </div>
-
-    <!-- Focus Mode Screen -->
     <div id="focus-mode-screen" class="fixed inset-0 text-white flex flex-col items-center justify-center p-4 z-[80] hidden">
         <div class="text-center">
             <p class="text-lg opacity-80 mb-2">Fokus pada:</p>
@@ -190,8 +180,6 @@
             <button id="focus-stop-btn" class="bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:bg-gray-200 transition-transform transform hover:scale-105">Stop, saya sudah melakukan</button>
         </div>
     </div>
-
-    <!-- Reflection Modal -->
     <div id="reflection-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[90] hidden">
         <div class="popup-content bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
             <h3 class="text-xl font-bold mb-4 text-center">Kerja Bagus! 🥳</h3>
@@ -203,8 +191,6 @@
             </div>
         </div>
     </div>
-
-    <!-- Daily Summary Modal -->
     <div id="summary-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[70] hidden">
         <div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
             <div class="p-4 border-b flex justify-between items-center">
@@ -217,63 +203,52 @@
         </div>
     </div>
 
-
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Splash Screen Logic ---
+            // Splash Screen Logic
             const splashScreen = document.getElementById('splash-screen');
             setTimeout(() => {
                 splashScreen.classList.add('hidden');
-            }, 2500); // Tampilkan selama 2.5 detik
+            }, 2500);
 
-            // --- Get All DOM Elements ---
+            // Get All DOM Elements
             const calendarBody = document.getElementById('calendar-body');
             const monthYearEl = document.getElementById('month-year');
             const prevMonthBtn = document.getElementById('prev-month');
             const nextMonthBtn = document.getElementById('next-month');
-            
             const detailsModal = document.getElementById('details-modal');
             const closeModalBtn = document.getElementById('close-modal');
             const modalDateEl = document.getElementById('modal-date');
             const showSummaryBtn = document.getElementById('show-summary-btn');
-            
             const tabButtons = document.querySelectorAll('.tab-button');
             const tabContents = document.querySelectorAll('.tab-content');
-
             const scheduleForm = document.getElementById('add-schedule-form');
             const scheduleTimeInput = document.getElementById('schedule-time');
             const scheduleDescInput = document.getElementById('schedule-desc');
             const scheduleList = document.getElementById('schedule-list');
-
             const expenseForm = document.getElementById('add-expense-form');
             const expenseDescInput = document.getElementById('expense-desc');
             const expenseAmountInput = document.getElementById('expense-amount');
             const expenseList = document.getElementById('expense-list');
             const dailyLimitInput = document.getElementById('daily-limit');
             const expenseSummary = document.getElementById('expense-summary');
-
             const alarmModal = document.getElementById('alarm-modal');
             const alarmTaskEl = document.getElementById('alarm-task');
             const alarmDoBtn = document.getElementById('alarm-do');
             const alarmSnoozeBtn = document.getElementById('alarm-snooze');
             const alarmSkipBtn = document.getElementById('alarm-skip');
-
             const snoozePromptModal = document.getElementById('snooze-prompt-modal');
             const snoozeMinutesInput = document.getElementById('snooze-minutes');
             const snoozeConfirmBtn = document.getElementById('snooze-confirm');
-            
             const motivationalPopup = document.getElementById('motivational-popup');
             const motivationalText = document.getElementById('motivational-text');
-
             const focusModeScreen = document.getElementById('focus-mode-screen');
             const focusTaskName = document.getElementById('focus-task-name');
             const focusStopBtn = document.getElementById('focus-stop-btn');
-
             const reflectionModal = document.getElementById('reflection-modal');
             const reflectionText = document.getElementById('reflection-text');
             const reflectionSaveBtn = document.getElementById('reflection-save-btn');
             const reflectionSkipBtn = document.getElementById('reflection-skip-btn');
-
             const summaryModal = document.getElementById('summary-modal');
             const summaryModalTitle = document.getElementById('summary-modal-title');
             const summaryModalContent = document.getElementById('summary-modal-content');
@@ -285,29 +260,20 @@
             let appData = JSON.parse(localStorage.getItem('jadwalinDataV2')) || {};
             let activeAlarm = null;
             let alarmInterval;
-            let audioCtx; // For alarm sound
+            let audioCtx;
 
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-            // --- The rest of the functions (saveData, renderCalendar, etc.) remain the same ---
-            // The JavaScript code from the previous version is complete and doesn't need changes here.
-            // Only the splash screen logic is added at the top.
-            const saveData = () => {
-                localStorage.setItem('jadwalinDataV2', JSON.stringify(appData));
-            };
 
             const renderCalendar = () => {
                 calendarBody.innerHTML = '';
                 const year = currentDate.getFullYear();
                 const month = currentDate.getMonth();
-
                 monthYearEl.textContent = `${months[month]} ${year}`;
-
                 const firstDay = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
 
                 for (let i = 0; i < firstDay; i++) {
-                    calendarBody.innerHTML += `<div class="p-2"></div>`;
+                    calendarBody.innerHTML += `<div></div>`;
                 }
 
                 for (let day = 1; day <= daysInMonth; day++) {
@@ -316,7 +282,11 @@
                     const isToday = day === today.getDate() && month === today.getMonth() && year === today.getFullYear();
                     
                     const dayEl = document.createElement('div');
-                    dayEl.className = `calendar-day relative flex items-center justify-center h-12 w-12 cursor-pointer rounded-full transition-colors ${isToday ? 'bg-green-500 text-white font-bold' : 'hover:bg-green-100'}`;
+                    
+                    // --- PERBAIKAN UTAMA DI SINI ---
+                    // Menggunakan 'aspect-square' untuk membuat kotak yang fleksibel
+                    dayEl.className = `calendar-day relative flex items-center justify-center aspect-square cursor-pointer rounded-full transition-colors text-sm sm:text-base ${isToday ? 'bg-green-500 text-white font-bold' : 'hover:bg-green-100'}`;
+                    
                     dayEl.textContent = day;
                     dayEl.dataset.dateKey = dayKey;
 
@@ -330,79 +300,47 @@
                     calendarBody.appendChild(dayEl);
                 }
             };
-
+            
+            // --- The rest of the JavaScript functions are unchanged ---
+            const saveData = () => localStorage.setItem('jadwalinDataV2', JSON.stringify(appData));
             const openModal = (dateKey) => {
                 selectedDateKey = dateKey;
                 const [year, month, day] = dateKey.split('-');
                 modalDateEl.textContent = `${day} ${months[parseInt(month) - 1]} ${year}`;
-                
                 switchTab('jadwal');
                 renderSchedule();
                 renderExpenses();
                 detailsModal.classList.remove('hidden');
             };
-
-            const closeModal = () => {
-                detailsModal.classList.add('hidden');
-                renderCalendar(); 
-            };
-            
+            const closeModal = () => { detailsModal.classList.add('hidden'); renderCalendar(); };
             const switchTab = (tabName) => {
                 tabContents.forEach(content => content.classList.add('hidden'));
                 document.getElementById(`${tabName}-content`).classList.remove('hidden');
-
                 tabButtons.forEach(button => {
                     button.classList.remove('tab-active');
-                    if (button.dataset.tab === tabName) {
-                        button.classList.add('tab-active');
-                    }
+                    if (button.dataset.tab === tabName) button.classList.add('tab-active');
                 });
             };
-
             const renderSchedule = () => {
                 scheduleList.innerHTML = '';
                 if (!appData[selectedDateKey] || !appData[selectedDateKey].schedule) return;
-
                 const sortedSchedule = appData[selectedDateKey].schedule.sort((a,b) => a.time.localeCompare(b.time));
-
                 sortedSchedule.forEach(item => {
                     const li = document.createElement('li');
                     li.className = `flex justify-between items-center p-3 rounded-lg ${item.completed ? 'bg-green-100 text-gray-500 line-through' : 'bg-gray-100'}`;
-                    li.innerHTML = `
-                        <div class="flex items-center">
-                            ${item.completed ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>' : ''}
-                            <div>
-                                <span class="font-semibold">${item.time}</span>
-                                <span class="ml-3">${item.desc}</span>
-                            </div>
-                        </div>
-                        <button data-id="${item.id}" class="delete-schedule-btn text-red-400 hover:text-red-600 p-1">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                        </button>
-                    `;
+                    li.innerHTML = `<div class="flex items-center">${item.completed ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>' : ''}<div><span class="font-semibold">${item.time}</span><span class="ml-3">${item.desc}</span></div></div><button data-id="${item.id}" class="delete-schedule-btn text-red-400 hover:text-red-600 p-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>`;
                     scheduleList.appendChild(li);
                 });
             };
-
             const handleAddSchedule = (e) => {
                 e.preventDefault();
                 if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
                 if (!appData[selectedDateKey].schedule) appData[selectedDateKey].schedule = [];
-
-                appData[selectedDateKey].schedule.push({
-                    id: Date.now(),
-                    time: scheduleTimeInput.value,
-                    desc: scheduleDescInput.value.trim(),
-                    completed: false,
-                    snoozeCount: 0,
-                    snoozeUntil: null,
-                    reflection: ''
-                });
+                appData[selectedDateKey].schedule.push({id: Date.now(), time: scheduleTimeInput.value, desc: scheduleDescInput.value.trim(), completed: false, snoozeCount: 0, snoozeUntil: null, reflection: ''});
                 saveData();
                 renderSchedule();
                 scheduleForm.reset();
             };
-
             const handleDeleteSchedule = (e) => {
                 if (!e.target.closest('.delete-schedule-btn')) return;
                 const id = parseInt(e.target.closest('.delete-schedule-btn').dataset.id);
@@ -410,58 +348,32 @@
                 saveData();
                 renderSchedule();
             };
-
             const renderExpenses = () => {
                 expenseList.innerHTML = '';
                 const data = appData[selectedDateKey]?.expenses;
                 dailyLimitInput.value = data?.limit || '';
-                
                 if (!data || !data.items || data.items.length === 0) {
                     expenseSummary.innerHTML = '';
                     expenseList.innerHTML = '<p class="text-center text-gray-400 mt-4">Belum ada pengeluaran hari ini.</p>';
                     return;
                 }
-
                 let total = 0;
                 data.items.forEach(item => {
                     total += item.amount;
                     const li = document.createElement('li');
                     li.className = 'flex justify-between items-center p-3 bg-gray-100 rounded-lg';
-                    li.innerHTML = `
-                        <span>${item.desc}</span>
-                        <div class="flex items-center gap-4">
-                            <span class="font-semibold">Rp ${item.amount.toLocaleString('id-ID')}</span>
-                            <button data-id="${item.id}" class="delete-expense-btn text-red-400 hover:text-red-600 p-1">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg>
-                            </button>
-                        </div>
-                    `;
+                    li.innerHTML = `<span>${item.desc}</span><div class="flex items-center gap-4"><span class="font-semibold">Rp ${item.amount.toLocaleString('id-ID')}</span><button data-id="${item.id}" class="delete-expense-btn text-red-400 hover:text-red-600 p-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></div>`;
                     expenseList.appendChild(li);
                 });
-
                 const limit = data.limit || 0;
                 const remaining = limit - total;
                 const progress = limit > 0 ? Math.min((total / limit) * 100, 100) : 0;
-                
-                expenseSummary.innerHTML = `
-                    <div class="p-3 bg-gray-50 rounded-lg border">
-                        <div class="flex justify-between mb-1">
-                            <span>Total: <strong>Rp ${total.toLocaleString('id-ID')}</strong></span>
-                            ${limit > 0 ? `<span>Sisa: <strong class="${remaining < 0 ? 'text-red-500' : 'text-green-600'}">Rp ${remaining.toLocaleString('id-ID')}</strong></span>` : ''}
-                        </div>
-                        ${limit > 0 ? `
-                        <div class="w-full bg-gray-200 rounded-full h-2.5">
-                            <div class="h-2.5 rounded-full ${progress > 80 ? 'bg-red-500' : (progress > 50 ? 'bg-yellow-400' : 'bg-green-500')}" style="width: ${progress}%"></div>
-                        </div>
-                        ` : ''}
-                    </div>
-                `;
+                expenseSummary.innerHTML = `<div class="p-3 bg-gray-50 rounded-lg border"><div class="flex justify-between mb-1"><span>Total: <strong>Rp ${total.toLocaleString('id-ID')}</strong></span>${limit > 0 ? `<span>Sisa: <strong class="${remaining < 0 ? 'text-red-500' : 'text-green-600'}">Rp ${remaining.toLocaleString('id-ID')}</strong></span>` : ''}</div>${limit > 0 ? `<div class="w-full bg-gray-200 rounded-full h-2.5"><div class="h-2.5 rounded-full ${progress > 80 ? 'bg-red-500' : (progress > 50 ? 'bg-yellow-400' : 'bg-green-500')}" style="width: ${progress}%"></div></div>` : ''}</div>`;
             };
-             const handleAddExpense = (e) => {
+            const handleAddExpense = (e) => {
                 e.preventDefault();
                 if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
                 if (!appData[selectedDateKey].expenses) appData[selectedDateKey].expenses = { limit: 0, items: [] };
-
                 appData[selectedDateKey].expenses.items.push({ id: Date.now(), desc: expenseDescInput.value.trim(), amount: parseInt(expenseAmountInput.value) });
                 saveData();
                 renderExpenses();
@@ -482,28 +394,19 @@
                 saveData();
                 renderExpenses();
             };
-
             const playAlarmSound = () => {
-                if (!audioCtx) {
-                    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                }
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioCtx.createOscillator();
                 const gainNode = audioCtx.createGain();
                 oscillator.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
-                
                 oscillator.type = 'sine';
                 oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
                 gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-
                 oscillator.start();
                 setTimeout(() => oscillator.stop(), 150);
-                setTimeout(() => {
-                    oscillator.start();
-                    setTimeout(() => oscillator.stop(), 150);
-                }, 300);
+                setTimeout(() => { oscillator.start(); setTimeout(() => oscillator.stop(), 150); }, 300);
             };
-
             const checkAlarms = () => {
                 const now = new Date();
                 const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
@@ -515,14 +418,9 @@
                     const [taskHour, taskMinute] = task.time.split(':').map(Number);
                     const isTime = currentHour === taskHour && currentMinute === taskMinute;
                     const isSnoozeOver = task.snoozeUntil && now.getTime() >= task.snoozeUntil;
-                    if (isTime || isSnoozeOver) {
-                        task.snoozeUntil = null;
-                        triggerAlarm(task, todayKey);
-                        break;
-                    }
+                    if (isTime || isSnoozeOver) { task.snoozeUntil = null; triggerAlarm(task, todayKey); break; }
                 }
             };
-
             const triggerAlarm = (task, dateKey) => {
                 activeAlarm = { ...task, dateKey };
                 alarmTaskEl.textContent = task.desc;
@@ -530,133 +428,69 @@
                 alarmModal.classList.remove('hidden');
                 playAlarmSound();
             };
-
             const showMotivationalMessage = (message) => {
                 motivationalText.textContent = message;
                 motivationalPopup.classList.remove('hidden');
                 setTimeout(() => motivationalPopup.classList.add('hidden'), 2500);
             };
-
-            const handleAlarmDo = () => {
-                alarmModal.classList.add('hidden');
-                focusTaskName.textContent = activeAlarm.desc;
-                focusModeScreen.classList.remove('hidden');
-            };
-            
-            const handleAlarmSnooze = () => {
-                alarmModal.classList.add('hidden');
-                snoozePromptModal.classList.remove('hidden');
-            };
-
+            const handleAlarmDo = () => { alarmModal.classList.add('hidden'); focusTaskName.textContent = activeAlarm.desc; focusModeScreen.classList.remove('hidden'); };
+            const handleAlarmSnooze = () => { alarmModal.classList.add('hidden'); snoozePromptModal.classList.remove('hidden'); };
             const handleSnoozeConfirm = () => {
                 const minutes = parseInt(snoozeMinutesInput.value) || 10;
                 const taskIndex = appData[activeAlarm.dateKey].schedule.findIndex(t => t.id === activeAlarm.id);
-                if (taskIndex > -1) {
-                    appData[activeAlarm.dateKey].schedule[taskIndex].snoozeCount++;
-                    appData[activeAlarm.dateKey].schedule[taskIndex].snoozeUntil = Date.now() + minutes * 60 * 1000;
-                    saveData();
-                }
-                snoozePromptModal.classList.add('hidden');
-                activeAlarm = null;
-                showMotivationalMessage("Oke, saya ingatkan lagi nanti!");
+                if (taskIndex > -1) { appData[activeAlarm.dateKey].schedule[taskIndex].snoozeCount++; appData[activeAlarm.dateKey].schedule[taskIndex].snoozeUntil = Date.now() + minutes * 60 * 1000; saveData(); }
+                snoozePromptModal.classList.add('hidden'); activeAlarm = null; showMotivationalMessage("Oke, saya ingatkan lagi nanti!");
             };
-
             const handleAlarmSkip = () => {
                 const taskIndex = appData[activeAlarm.dateKey].schedule.findIndex(t => t.id === activeAlarm.id);
-                if (taskIndex > -1) { appData[activeAlarm.dateKey].schedule[taskIndex].completed = true; }
-                saveData();
-                alarmModal.classList.add('hidden');
-                activeAlarm = null;
-                showMotivationalMessage("Baiklah, semoga besok bisa dilakukan ya!");
+                if (taskIndex > -1) appData[activeAlarm.dateKey].schedule[taskIndex].completed = true; saveData(); alarmModal.classList.add('hidden'); activeAlarm = null; showMotivationalMessage("Baiklah, semoga besok bisa dilakukan ya!");
             };
-
-            const handleFocusStop = () => {
-                focusModeScreen.classList.add('hidden');
-                reflectionModal.classList.remove('hidden');
-            };
-
+            const handleFocusStop = () => { focusModeScreen.classList.add('hidden'); reflectionModal.classList.remove('hidden'); };
             const completeTaskAndReflect = (reflectionNote = '') => {
                 const taskIndex = appData[activeAlarm.dateKey].schedule.findIndex(t => t.id === activeAlarm.id);
-                if (taskIndex > -1) {
-                    appData[activeAlarm.dateKey].schedule[taskIndex].completed = true;
-                    appData[activeAlarm.dateKey].schedule[taskIndex].reflection = reflectionNote;
-                    saveData();
-                }
-                reflectionText.value = '';
-                reflectionModal.classList.add('hidden');
-                activeAlarm = null;
-                showMotivationalMessage("Selesai! Lanjut ke kegiatan berikutnya!");
-            }
-
+                if (taskIndex > -1) { appData[activeAlarm.dateKey].schedule[taskIndex].completed = true; appData[activeAlarm.dateKey].schedule[taskIndex].reflection = reflectionNote; saveData(); }
+                reflectionText.value = ''; reflectionModal.classList.add('hidden'); activeAlarm = null; showMotivationalMessage("Selesai! Lanjut ke kegiatan berikutnya!");
+            };
             const renderDailySummary = (dateKey) => {
                 const [year, month, day] = dateKey.split('-');
                 summaryModalTitle.textContent = `Ringkasan untuk ${day} ${months[parseInt(month) - 1]} ${year}`;
-
                 const dayData = appData[dateKey];
                 let contentHTML = '<div class="space-y-6">';
-
                 const completedTasks = dayData?.schedule?.filter(t => t.completed && t.desc) || [];
                 contentHTML += '<div><h4 class="font-bold text-lg mb-2 text-green-700">Aktivitas Selesai</h4>';
                 if (completedTasks.length > 0) {
                     contentHTML += '<ul class="space-y-3">';
-                    completedTasks.forEach(task => {
-                        contentHTML += `
-                            <li class="p-3 bg-gray-50 rounded-lg">
-                                <p class="font-semibold">${task.desc}</p>
-                                ${task.reflection ? `<p class="text-sm text-gray-600 mt-1 pl-4 border-l-2 border-green-200"><em>"${task.reflection}"</em></p>` : ''}
-                            </li>
-                        `;
-                    });
+                    completedTasks.forEach(task => { contentHTML += `<li class="p-3 bg-gray-50 rounded-lg"><p class="font-semibold">${task.desc}</p>${task.reflection ? `<p class="text-sm text-gray-600 mt-1 pl-4 border-l-2 border-green-200"><em>"${task.reflection}"</em></p>` : ''}</li>`; });
                     contentHTML += '</ul>';
-                } else {
-                    contentHTML += '<p class="text-gray-500">Belum ada aktivitas yang selesai hari ini.</p>';
-                }
+                } else { contentHTML += '<p class="text-gray-500">Belum ada aktivitas yang selesai hari ini.</p>'; }
                 contentHTML += '</div>';
-
                 const expenses = dayData?.expenses;
                 let totalExpense = 0;
                 expenses?.items.forEach(item => totalExpense += item.amount);
-                
                 contentHTML += '<div><h4 class="font-bold text-lg mb-2 text-yellow-700">Ringkasan Keuangan</h4>';
-                if (totalExpense > 0) {
-                    contentHTML += `<p class="text-gray-600">Total pengeluaran hari ini: <strong class="text-xl">Rp ${totalExpense.toLocaleString('id-ID')}</strong></p>`;
-                } else {
-                    contentHTML += '<p class="text-gray-500">Tidak ada pengeluaran hari ini.</p>';
-                }
-                 contentHTML += '</div>';
-
-                contentHTML += '</div>';
+                if (totalExpense > 0) { contentHTML += `<p class="text-gray-600">Total pengeluaran hari ini: <strong class="text-xl">Rp ${totalExpense.toLocaleString('id-ID')}</strong></p>`; } else { contentHTML += '<p class="text-gray-500">Tidak ada pengeluaran hari ini.</p>'; }
+                contentHTML += '</div></div>';
                 summaryModalContent.innerHTML = contentHTML;
-            }
+            };
 
             prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
             nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
-
             closeModalBtn.addEventListener('click', closeModal);
             detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeModal(); });
-
             tabButtons.forEach(button => button.addEventListener('click', () => switchTab(button.dataset.tab)));
-            
             scheduleForm.addEventListener('submit', handleAddSchedule);
             scheduleList.addEventListener('click', handleDeleteSchedule);
-
             expenseForm.addEventListener('submit', handleAddExpense);
             dailyLimitInput.addEventListener('change', handleSetLimit);
             expenseList.addEventListener('click', handleDeleteExpense);
-
             alarmDoBtn.addEventListener('click', handleAlarmDo);
             alarmSnoozeBtn.addEventListener('click', handleAlarmSnooze);
             alarmSkipBtn.addEventListener('click', handleAlarmSkip);
             snoozeConfirmBtn.addEventListener('click', handleSnoozeConfirm);
-
             focusStopBtn.addEventListener('click', handleFocusStop);
             reflectionSaveBtn.addEventListener('click', () => completeTaskAndReflect(reflectionText.value.trim()));
             reflectionSkipBtn.addEventListener('click', () => completeTaskAndReflect());
-
-            showSummaryBtn.addEventListener('click', () => {
-                renderDailySummary(selectedDateKey);
-                summaryModal.classList.remove('hidden');
-            });
+            showSummaryBtn.addEventListener('click', () => { renderDailySummary(selectedDateKey); summaryModal.classList.remove('hidden'); });
             summaryCloseBtn.addEventListener('click', () => summaryModal.classList.add('hidden'));
             summaryModal.addEventListener('click', (e) => { if (e.target === summaryModal) summaryModal.classList.add('hidden'); });
 
