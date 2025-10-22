@@ -106,7 +106,7 @@
         </div>
     </div>
 
-    <!-- Daily Details Modal and other modals... (HTML content is identical to the previous correct version) -->
+    <!-- Daily Details Modal and other modals... -->
     <div id="details-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 hidden">
         <div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
             <div class="p-4 border-b flex justify-between items-center">
@@ -134,21 +134,33 @@
                     <ul id="schedule-list" class="space-y-2"></ul>
                 </div>
                 <div id="pengeluaran-content" class="tab-content hidden">
+                    <!-- PERUBAHAN 1: Input Dana Tersedia -->
+                    <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <label for="available-funds" class="block text-sm font-medium text-blue-800 mb-1">Dana Tersedia Hari Ini (Rp)</label>
+                        <input type="number" id="available-funds" placeholder="Contoh: 300000" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                    </div>
+                    
                     <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
                         <label for="daily-limit" class="block text-sm font-medium text-yellow-800 mb-1">Batas Pengeluaran Harian (Rp)</label>
                         <input type="number" id="daily-limit" placeholder="Contoh: 50000" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-yellow-500">
                     </div>
+
+                    <!-- PERUBAHAN 2: Input Pengeluaran Diperbesar -->
                     <form id="add-expense-form" class="flex gap-2 mb-4">
-                        <input type="text" id="expense-desc" placeholder="Keterangan..." class="flex-grow p-2 border rounded-lg focus:ring-2 focus:ring-yellow-500" required>
-                        <input type="number" id="expense-amount" placeholder="Jumlah (Rp)" class="w-1/3 p-2 border rounded-lg focus:ring-2 focus:ring-yellow-500" required>
-                        <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded-lg hover:bg-yellow-600 transition-transform transform hover:scale-105">+</button>
+                        <input type="text" id="expense-desc" placeholder="Keterangan..." class="flex-grow p-3 text-base border rounded-lg focus:ring-2 focus:ring-yellow-500" required>
+                        <input type="number" id="expense-amount" placeholder="Jumlah (Rp)" class="w-2/5 p-3 text-base border rounded-lg focus:ring-2 focus:ring-yellow-500" required>
+                        <button type="submit" class="bg-yellow-500 text-white px-4 rounded-lg hover:bg-yellow-600 transition-transform transform hover:scale-105 text-2xl">+</button>
                     </form>
-                    <div id="expense-summary" class="mb-4 text-sm"></div>
+
+                    <!-- PERUBAHAN 3: Tabel Sisa Uang & Ringkasan Limit -->
+                    <div id="remaining-funds-summary" class="mb-4"></div>
+                    <div id="expense-summary" class="text-sm"></div>
                     <ul id="expense-list" class="space-y-2"></ul>
                 </div>
             </div>
         </div>
     </div>
+    <!-- The rest of the modals are unchanged -->
     <div id="alarm-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[60] hidden">
         <div class="motivational-popup bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
             <div class="text-5xl mb-4 animate-bounce">⏰</div>
@@ -232,6 +244,10 @@
             const expenseList = document.getElementById('expense-list');
             const dailyLimitInput = document.getElementById('daily-limit');
             const expenseSummary = document.getElementById('expense-summary');
+            // PERUBAHAN 4: Get DOM Element Baru
+            const availableFundsInput = document.getElementById('available-funds');
+            const remainingFundsSummary = document.getElementById('remaining-funds-summary');
+            
             const alarmModal = document.getElementById('alarm-modal');
             const alarmTaskEl = document.getElementById('alarm-task');
             const alarmDoBtn = document.getElementById('alarm-do');
@@ -283,8 +299,6 @@
                     
                     const dayEl = document.createElement('div');
                     
-                    // --- PERBAIKAN UTAMA DI SINI ---
-                    // Menggunakan 'aspect-square' untuk membuat kotak yang fleksibel
                     dayEl.className = `calendar-day relative flex items-center justify-center aspect-square cursor-pointer rounded-full transition-colors text-sm sm:text-base ${isToday ? 'bg-green-500 text-white font-bold' : 'hover:bg-green-100'}`;
                     
                     dayEl.textContent = day;
@@ -301,7 +315,6 @@
                 }
             };
             
-            // --- The rest of the JavaScript functions are unchanged ---
             const saveData = () => localStorage.setItem('jadwalinDataV2', JSON.stringify(appData));
             const openModal = (dateKey) => {
                 selectedDateKey = dateKey;
@@ -348,45 +361,89 @@
                 saveData();
                 renderSchedule();
             };
+            
+            // PERUBAHAN 5: Memperbarui fungsi renderExpenses
             const renderExpenses = () => {
                 expenseList.innerHTML = '';
                 const data = appData[selectedDateKey]?.expenses;
+                
+                // Set nilai input dari data yang tersimpan
                 dailyLimitInput.value = data?.limit || '';
+                availableFundsInput.value = data?.availableFunds || '';
+
                 if (!data || !data.items || data.items.length === 0) {
                     expenseSummary.innerHTML = '';
                     expenseList.innerHTML = '<p class="text-center text-gray-400 mt-4">Belum ada pengeluaran hari ini.</p>';
-                    return;
+                } else {
+                    let total = 0;
+                    data.items.forEach(item => {
+                        total += item.amount;
+                        const li = document.createElement('li');
+                        li.className = 'flex justify-between items-center p-3 bg-gray-100 rounded-lg';
+                        li.innerHTML = `<span>${item.desc}</span><div class="flex items-center gap-4"><span class="font-semibold">Rp ${item.amount.toLocaleString('id-ID')}</span><button data-id="${item.id}" class="delete-expense-btn text-red-400 hover:text-red-600 p-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></div>`;
+                        expenseList.appendChild(li);
+                    });
+
+                    const limit = data.limit || 0;
+                    const remainingLimit = limit - total;
+                    const progress = limit > 0 ? Math.min((total / limit) * 100, 100) : 0;
+                    
+                    expenseSummary.innerHTML = `<div class="p-3 bg-gray-50 rounded-lg border"><div class="flex justify-between mb-1"><span>Total Keluar: <strong>Rp ${total.toLocaleString('id-ID')}</strong></span>${limit > 0 ? `<span>Sisa Limit: <strong class="${remainingLimit < 0 ? 'text-red-500' : 'text-green-600'}">Rp ${remainingLimit.toLocaleString('id-ID')}</strong></span>` : ''}</div>${limit > 0 ? `<div class="w-full bg-gray-200 rounded-full h-2.5"><div class="h-2.5 rounded-full ${progress > 80 ? 'bg-red-500' : (progress > 50 ? 'bg-yellow-400' : 'bg-green-500')}" style="width: ${progress}%"></div></div>` : ''}</div>`;
                 }
-                let total = 0;
-                data.items.forEach(item => {
-                    total += item.amount;
-                    const li = document.createElement('li');
-                    li.className = 'flex justify-between items-center p-3 bg-gray-100 rounded-lg';
-                    li.innerHTML = `<span>${item.desc}</span><div class="flex items-center gap-4"><span class="font-semibold">Rp ${item.amount.toLocaleString('id-ID')}</span><button data-id="${item.id}" class="delete-expense-btn text-red-400 hover:text-red-600 p-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button></div>`;
-                    expenseList.appendChild(li);
-                });
-                const limit = data.limit || 0;
-                const remaining = limit - total;
-                const progress = limit > 0 ? Math.min((total / limit) * 100, 100) : 0;
-                expenseSummary.innerHTML = `<div class="p-3 bg-gray-50 rounded-lg border"><div class="flex justify-between mb-1"><span>Total: <strong>Rp ${total.toLocaleString('id-ID')}</strong></span>${limit > 0 ? `<span>Sisa: <strong class="${remaining < 0 ? 'text-red-500' : 'text-green-600'}">Rp ${remaining.toLocaleString('id-ID')}</strong></span>` : ''}</div>${limit > 0 ? `<div class="w-full bg-gray-200 rounded-full h-2.5"><div class="h-2.5 rounded-full ${progress > 80 ? 'bg-red-500' : (progress > 50 ? 'bg-yellow-400' : 'bg-green-500')}" style="width: ${progress}%"></div></div>` : ''}</div>`;
+
+                // Kalkulasi dan tampilkan sisa dana
+                remainingFundsSummary.innerHTML = '';
+                const availableFunds = data?.availableFunds || 0;
+                const totalExpenses = data?.items.reduce((sum, item) => sum + item.amount, 0) || 0;
+                
+                if (availableFunds > 0 || totalExpenses > 0) {
+                     const remaining = availableFunds - totalExpenses;
+                     remainingFundsSummary.innerHTML = `
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <div class="flex justify-between items-center">
+                                <span class="text-blue-800 font-medium">Sisa Uang Anda:</span>
+                                <span class="font-bold text-2xl ${remaining < 0 ? 'text-red-500' : 'text-blue-900'}">
+                                    Rp ${remaining.toLocaleString('id-ID')}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                }
             };
+            
+            // PERUBAHAN 6: Menambahkan/memperbarui fungsi handle
+            const initializeExpenses = () => {
+                if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
+                if (!appData[selectedDateKey].expenses) {
+                    appData[selectedDateKey].expenses = { limit: 0, items: [], availableFunds: 0 };
+                }
+            };
+
             const handleAddExpense = (e) => {
                 e.preventDefault();
-                if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
-                if (!appData[selectedDateKey].expenses) appData[selectedDateKey].expenses = { limit: 0, items: [] };
+                initializeExpenses();
                 appData[selectedDateKey].expenses.items.push({ id: Date.now(), desc: expenseDescInput.value.trim(), amount: parseInt(expenseAmountInput.value) });
                 saveData();
                 renderExpenses();
                 expenseForm.reset();
             };
+            
             const handleSetLimit = () => {
                 const limit = parseInt(dailyLimitInput.value);
-                if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
-                if (!appData[selectedDateKey].expenses) appData[selectedDateKey].expenses = { items: [] };
+                initializeExpenses();
                 appData[selectedDateKey].expenses.limit = isNaN(limit) || limit < 0 ? 0 : limit;
                 saveData();
                 renderExpenses();
             };
+
+            const handleSetAvailableFunds = () => {
+                const funds = parseInt(availableFundsInput.value);
+                initializeExpenses();
+                appData[selectedDateKey].expenses.availableFunds = isNaN(funds) || funds < 0 ? 0 : funds;
+                saveData();
+                renderExpenses();
+            };
+            
             const handleDeleteExpense = (e) => {
                 if (!e.target.closest('.delete-expense-btn')) return;
                 const id = parseInt(e.target.closest('.delete-expense-btn').dataset.id);
@@ -394,6 +451,7 @@
                 saveData();
                 renderExpenses();
             };
+            
             const playAlarmSound = () => {
                 if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioCtx.createOscillator();
@@ -482,6 +540,8 @@
             scheduleList.addEventListener('click', handleDeleteSchedule);
             expenseForm.addEventListener('submit', handleAddExpense);
             dailyLimitInput.addEventListener('change', handleSetLimit);
+            // PERUBAHAN 7: Event Listener untuk input dana
+            availableFundsInput.addEventListener('change', handleSetAvailableFunds);
             expenseList.addEventListener('click', handleDeleteExpense);
             alarmDoBtn.addEventListener('click', handleAlarmDo);
             alarmSnoozeBtn.addEventListener('click', handleAlarmSnooze);
