@@ -134,10 +134,10 @@
                     <ul id="schedule-list" class="space-y-2"></ul>
                 </div>
                 <div id="pengeluaran-content" class="tab-content hidden">
-                    <!-- PERUBAHAN 1: Input Dana Tersedia -->
+                    <!-- PERUBAHAN 1: Input Dana Tersedia diubah menjadi Anggaran Global -->
                     <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
-                        <label for="available-funds" class="block text-sm font-medium text-blue-800 mb-1">Dana Tersedia Hari Ini (Rp)</label>
-                        <input type="number" id="available-funds" placeholder="Contoh: 300000" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
+                        <label for="global-budget-input" class="block text-sm font-medium text-blue-800 mb-1">Atur Anggaran Global (Rp)</label>
+                        <input type="number" id="global-budget-input" placeholder="Contoh: 1000000" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
                     </div>
                     
                     <div class="mb-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -145,14 +145,14 @@
                         <input type="number" id="daily-limit" placeholder="Contoh: 50000" class="w-full p-2 border rounded-lg focus:ring-2 focus:ring-yellow-500">
                     </div>
 
-                    <!-- PERUBAHAN 2: Input Pengeluaran Diperbesar -->
+                    <!-- PERUBAHAN 2: Input Pengeluaran Diperbesar (Tidak berubah) -->
                     <form id="add-expense-form" class="flex gap-2 mb-4">
                         <input type="text" id="expense-desc" placeholder="Keterangan..." class="flex-grow p-3 text-base border rounded-lg focus:ring-2 focus:ring-yellow-500" required>
                         <input type="number" id="expense-amount" placeholder="Jumlah (Rp)" class="w-2/5 p-3 text-base border rounded-lg focus:ring-2 focus:ring-yellow-500" required>
                         <button type="submit" class="bg-yellow-500 text-white px-4 rounded-lg hover:bg-yellow-600 transition-transform transform hover:scale-105 text-2xl">+</button>
                     </form>
 
-                    <!-- PERUBAHAN 3: Tabel Sisa Uang & Ringkasan Limit -->
+                    <!-- PERUBAHAN 3: Tabel Sisa Uang (Sekarang Global) & Ringkasan Limit Harian -->
                     <div id="remaining-funds-summary" class="mb-4"></div>
                     <div id="expense-summary" class="text-sm"></div>
                     <ul id="expense-list" class="space-y-2"></ul>
@@ -245,7 +245,7 @@
             const dailyLimitInput = document.getElementById('daily-limit');
             const expenseSummary = document.getElementById('expense-summary');
             // PERUBAHAN 4: Get DOM Element Baru
-            const availableFundsInput = document.getElementById('available-funds');
+            const globalBudgetInput = document.getElementById('global-budget-input');
             const remainingFundsSummary = document.getElementById('remaining-funds-summary');
             
             const alarmModal = document.getElementById('alarm-modal');
@@ -369,7 +369,8 @@
                 
                 // Set nilai input dari data yang tersimpan
                 dailyLimitInput.value = data?.limit || '';
-                availableFundsInput.value = data?.availableFunds || '';
+                // Set nilai Anggaran Global dari data global
+                globalBudgetInput.value = appData.globalBudget || '';
 
                 if (!data || !data.items || data.items.length === 0) {
                     expenseSummary.innerHTML = '';
@@ -388,20 +389,31 @@
                     const remainingLimit = limit - total;
                     const progress = limit > 0 ? Math.min((total / limit) * 100, 100) : 0;
                     
-                    expenseSummary.innerHTML = `<div class="p-3 bg-gray-50 rounded-lg border"><div class="flex justify-between mb-1"><span>Total Keluar: <strong>Rp ${total.toLocaleString('id-ID')}</strong></span>${limit > 0 ? `<span>Sisa Limit: <strong class="${remainingLimit < 0 ? 'text-red-500' : 'text-green-600'}">Rp ${remainingLimit.toLocaleString('id-ID')}</strong></span>` : ''}</div>${limit > 0 ? `<div class="w-full bg-gray-200 rounded-full h-2.5"><div class="h-2.5 rounded-full ${progress > 80 ? 'bg-red-500' : (progress > 50 ? 'bg-yellow-400' : 'bg-green-500')}" style="width: ${progress}%"></div></div>` : ''}</div>`;
+                    expenseSummary.innerHTML = `<div class="p-3 bg-gray-50 rounded-lg border"><div class="flex justify-between mb-1"><span>Total Keluar (Hari Ini): <strong>Rp ${total.toLocaleString('id-ID')}</strong></span>${limit > 0 ? `<span>Sisa Limit: <strong class="${remainingLimit < 0 ? 'text-red-500' : 'text-green-600'}">Rp ${remainingLimit.toLocaleString('id-ID')}</strong></span>` : ''}</div>${limit > 0 ? `<div class="w-full bg-gray-200 rounded-full h-2.5"><div class="h-2.5 rounded-full ${progress > 80 ? 'bg-red-500' : (progress > 50 ? 'bg-yellow-400' : 'bg-green-500')}" style="width: ${progress}%"></div></div>` : ''}</div>`;
                 }
 
-                // Kalkulasi dan tampilkan sisa dana
+                // Kalkulasi dan tampilkan sisa dana GLOBAL
                 remainingFundsSummary.innerHTML = '';
-                const availableFunds = data?.availableFunds || 0;
-                const totalExpenses = data?.items.reduce((sum, item) => sum + item.amount, 0) || 0;
+                const globalBudget = appData.globalBudget || 0;
+
+                let totalExpensesForAllDays = 0;
+                // Iterasi semua data untuk menghitung total pengeluaran
+                Object.keys(appData).forEach(key => {
+                    // Cek apakah key adalah format tanggal YYYY-MM-DD
+                    if (key.match(/^\d{4}-\d{2}-\d{2}$/)) { 
+                        const dayData = appData[key];
+                        if (dayData.expenses && dayData.expenses.items) {
+                            totalExpensesForAllDays += dayData.expenses.items.reduce((sum, item) => sum + item.amount, 0);
+                        }
+                    }
+                });
                 
-                if (availableFunds > 0 || totalExpenses > 0) {
-                     const remaining = availableFunds - totalExpenses;
+                if (globalBudget > 0 || totalExpensesForAllDays > 0) {
+                     const remaining = globalBudget - totalExpensesForAllDays;
                      remainingFundsSummary.innerHTML = `
                         <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
                             <div class="flex justify-between items-center">
-                                <span class="text-blue-800 font-medium">Sisa Uang Anda:</span>
+                                <span class="text-blue-800 font-medium">Sisa Anggaran Global:</span>
                                 <span class="font-bold text-2xl ${remaining < 0 ? 'text-red-500' : 'text-blue-900'}">
                                     Rp ${remaining.toLocaleString('id-ID')}
                                 </span>
@@ -415,16 +427,24 @@
             const initializeExpenses = () => {
                 if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
                 if (!appData[selectedDateKey].expenses) {
-                    appData[selectedDateKey].expenses = { limit: 0, items: [], availableFunds: 0 };
+                    // 'availableFunds' tidak lagi disimpan harian
+                    appData[selectedDateKey].expenses = { limit: 0, items: [] };
                 }
             };
 
             const handleAddExpense = (e) => {
                 e.preventDefault();
                 initializeExpenses();
-                appData[selectedDateKey].expenses.items.push({ id: Date.now(), desc: expenseDescInput.value.trim(), amount: parseInt(expenseAmountInput.value) });
+                // Validasi input sebelum parsing
+                const amountValue = expenseAmountInput.value;
+                if (!amountValue || isNaN(parseInt(amountValue))) {
+                    // Anda bisa menambahkan notifikasi error di sini jika mau
+                    console.error("Jumlah tidak valid");
+                    return;
+                }
+                appData[selectedDateKey].expenses.items.push({ id: Date.now(), desc: expenseDescInput.value.trim(), amount: parseInt(amountValue) });
                 saveData();
-                renderExpenses();
+                renderExpenses(); // Re-render akan menghitung ulang sisa global
                 expenseForm.reset();
             };
             
@@ -436,12 +456,12 @@
                 renderExpenses();
             };
 
-            const handleSetAvailableFunds = () => {
-                const funds = parseInt(availableFundsInput.value);
-                initializeExpenses();
-                appData[selectedDateKey].expenses.availableFunds = isNaN(funds) || funds < 0 ? 0 : funds;
+            // Fungsi ini sekarang mengatur ANGGARAN GLOBAL
+            const handleSetGlobalBudget = () => {
+                const funds = parseInt(globalBudgetInput.value);
+                appData.globalBudget = isNaN(funds) || funds < 0 ? 0 : funds;
                 saveData();
-                renderExpenses();
+                renderExpenses(); // Re-render untuk update tampilan sisa anggaran
             };
             
             const handleDeleteExpense = (e) => {
@@ -449,7 +469,7 @@
                 const id = parseInt(e.target.closest('.delete-expense-btn').dataset.id);
                 appData[selectedDateKey].expenses.items = appData[selectedDateKey].expenses.items.filter(item => item.id !== id);
                 saveData();
-                renderExpenses();
+                renderExpenses(); // Re-render akan menghitung ulang sisa global
             };
             
             const playAlarmSound = () => {
@@ -540,8 +560,8 @@
             scheduleList.addEventListener('click', handleDeleteSchedule);
             expenseForm.addEventListener('submit', handleAddExpense);
             dailyLimitInput.addEventListener('change', handleSetLimit);
-            // PERUBAHAN 7: Event Listener untuk input dana
-            availableFundsInput.addEventListener('change', handleSetAvailableFunds);
+            // PERUBAHAN 7: Event Listener untuk input dana global
+            globalBudgetInput.addEventListener('change', handleSetGlobalBudget);
             expenseList.addEventListener('click', handleDeleteExpense);
             alarmDoBtn.addEventListener('click', handleAlarmDo);
             alarmSnoozeBtn.addEventListener('click', handleAlarmSnooze);
