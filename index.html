@@ -112,28 +112,17 @@
             <div class="p-4 border-b flex justify-between items-center">
                 <h3 id="modal-date" class="text-lg font-bold"></h3>
                 <div>
-                     <button id="show-summary-btn" class="text-sm bg-green-100 text-green-700 px-3 py-1 rounded-lg hover:bg-green-200 transition-colors">Ringkasan</button>
+                     <!-- Tombol Ringkasan Dihapus -->
                      <button id="close-modal" class="p-2 rounded-full hover:bg-gray-100 ml-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </button>
                 </div>
             </div>
-            <div class="border-b">
-                <div class="flex justify-around p-2">
-                    <button data-tab="jadwal" class="tab-button flex-1 py-2 text-center text-gray-500 border-b-2 border-transparent transition-colors">Jadwal Saya</button>
-                    <button data-tab="pengeluaran" class="tab-button flex-1 py-2 text-center text-gray-500 border-b-2 border-transparent transition-colors">Pengeluaran</button>
-                </div>
-            </div>
+            <!-- Navigasi Tab Dihapus -->
             <div class="overflow-y-auto p-5 flex-grow">
-                <div id="jadwal-content" class="tab-content">
-                    <form id="add-schedule-form" class="flex gap-2 mb-4">
-                        <input type="time" id="schedule-time" class="w-1/3 p-2 border rounded-lg focus:ring-2 focus:ring-green-400" required>
-                        <input type="text" id="schedule-desc" placeholder="Nama kegiatan..." class="flex-grow p-2 border rounded-lg focus:ring-2 focus:ring-green-400" required>
-                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-transform transform hover:scale-105">+</button>
-                    </form>
-                    <ul id="schedule-list" class="space-y-2"></ul>
-                </div>
-                <div id="pengeluaran-content" class="tab-content hidden">
+                <!-- Konten Jadwal Dihapus -->
+                <!-- Konten Pengeluaran sekarang default dan tidak lagi 'hidden' -->
+                <div id="pengeluaran-content" class="tab-content">
                     <!-- PERUBAHAN 1: Input Dana Tersedia diubah menjadi Anggaran Global -->
                     <div class="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg">
                         <label for="global-budget-input" class="block text-sm font-medium text-blue-800 mb-1">Atur Anggaran Global (Rp)</label>
@@ -160,60 +149,7 @@
             </div>
         </div>
     </div>
-    <!-- The rest of the modals are unchanged -->
-    <div id="alarm-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[60] hidden">
-        <div class="motivational-popup bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
-            <div class="text-5xl mb-4 animate-bounce">⏰</div>
-            <h3 class="text-xl font-bold mb-2">Waktunya!</h3>
-            <p id="alarm-task" class="text-gray-600 mb-6 text-lg"></p>
-            <div class="flex flex-col gap-3">
-                <button id="alarm-do" class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-transform transform hover:scale-105">Oke, saya lakukan!</button>
-                <button id="alarm-snooze" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-transform transform hover:scale-105">Tunda Dulu</button>
-                <button id="alarm-skip" class="w-full bg-gray-200 text-gray-600 py-2 rounded-lg hover:bg-gray-300 transition-colors hidden">Sepertinya tidak sekarang</button>
-            </div>
-        </div>
-    </div>
-    <div id="snooze-prompt-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[70] hidden">
-         <div class="popup-content bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
-            <h3 class="text-xl font-bold mb-4">Tunda berapa menit?</h3>
-            <input type="number" id="snooze-minutes" value="10" class="w-full text-center p-3 border rounded-lg text-lg mb-4 focus:ring-2 focus:ring-yellow-500">
-            <button id="snooze-confirm" class="w-full bg-yellow-500 text-white py-3 rounded-lg font-semibold hover:bg-yellow-600 transition-transform transform hover:scale-105">OK, ingatkan lagi nanti</button>
-         </div>
-    </div>
-    <div id="motivational-popup" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[100] hidden">
-        <div class="motivational-popup bg-white p-8 rounded-2xl shadow-2xl text-center w-full max-w-sm">
-            <p id="motivational-text" class="text-xl font-semibold text-gray-700"></p>
-        </div>
-    </div>
-    <div id="focus-mode-screen" class="fixed inset-0 text-white flex flex-col items-center justify-center p-4 z-[80] hidden">
-        <div class="text-center">
-            <p class="text-lg opacity-80 mb-2">Fokus pada:</p>
-            <h2 id="focus-task-name" class="text-4xl font-bold mb-12"></h2>
-            <button id="focus-stop-btn" class="bg-white text-green-600 px-8 py-4 rounded-full font-bold text-lg shadow-lg hover:bg-gray-200 transition-transform transform hover:scale-105">Stop, saya sudah melakukan</button>
-        </div>
-    </div>
-    <div id="reflection-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-[90] hidden">
-        <div class="popup-content bg-white p-8 rounded-2xl shadow-2xl w-full max-w-sm">
-            <h3 class="text-xl font-bold mb-4 text-center">Kerja Bagus! 🥳</h3>
-            <label for="reflection-text" class="block text-gray-600 mb-2">Apa yang kamu dapatkan tadi?</label>
-            <textarea id="reflection-text" rows="4" class="w-full p-3 border rounded-lg mb-4 focus:ring-2 focus:ring-green-400" placeholder="Tulis catatan singkat di sini..."></textarea>
-            <div class="flex flex-col gap-3">
-                <button id="reflection-save-btn" class="w-full bg-green-500 text-white py-3 rounded-lg font-semibold hover:bg-green-600 transition-transform transform hover:scale-105">Simpan Catatan</button>
-                <button id="reflection-skip-btn" class="w-full bg-gray-200 text-gray-600 py-2 rounded-lg hover:bg-gray-300 transition-colors">Lewati</button>
-            </div>
-        </div>
-    </div>
-    <div id="summary-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-[70] hidden">
-        <div class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-md max-h-[90vh] flex flex-col">
-            <div class="p-4 border-b flex justify-between items-center">
-                <h3 id="summary-modal-title" class="text-lg font-bold"></h3>
-                <button id="summary-close-btn" class="p-2 rounded-full hover:bg-gray-100">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
-                </button>
-            </div>
-            <div id="summary-modal-content" class="overflow-y-auto p-5"></div>
-        </div>
-    </div>
+    <!-- Modal Alarm, Snooze, Motivasi, Fokus, Refleksi, dan Ringkasan Dihapus -->
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -231,13 +167,7 @@
             const detailsModal = document.getElementById('details-modal');
             const closeModalBtn = document.getElementById('close-modal');
             const modalDateEl = document.getElementById('modal-date');
-            const showSummaryBtn = document.getElementById('show-summary-btn');
-            const tabButtons = document.querySelectorAll('.tab-button');
-            const tabContents = document.querySelectorAll('.tab-content');
-            const scheduleForm = document.getElementById('add-schedule-form');
-            const scheduleTimeInput = document.getElementById('schedule-time');
-            const scheduleDescInput = document.getElementById('schedule-desc');
-            const scheduleList = document.getElementById('schedule-list');
+            // Element terkait Jadwal, Tab, dan Ringkasan Dihapus
             const expenseForm = document.getElementById('add-expense-form');
             const expenseDescInput = document.getElementById('expense-desc');
             const expenseAmountInput = document.getElementById('expense-amount');
@@ -248,34 +178,13 @@
             const globalBudgetInput = document.getElementById('global-budget-input');
             const remainingFundsSummary = document.getElementById('remaining-funds-summary');
             
-            const alarmModal = document.getElementById('alarm-modal');
-            const alarmTaskEl = document.getElementById('alarm-task');
-            const alarmDoBtn = document.getElementById('alarm-do');
-            const alarmSnoozeBtn = document.getElementById('alarm-snooze');
-            const alarmSkipBtn = document.getElementById('alarm-skip');
-            const snoozePromptModal = document.getElementById('snooze-prompt-modal');
-            const snoozeMinutesInput = document.getElementById('snooze-minutes');
-            const snoozeConfirmBtn = document.getElementById('snooze-confirm');
-            const motivationalPopup = document.getElementById('motivational-popup');
-            const motivationalText = document.getElementById('motivational-text');
-            const focusModeScreen = document.getElementById('focus-mode-screen');
-            const focusTaskName = document.getElementById('focus-task-name');
-            const focusStopBtn = document.getElementById('focus-stop-btn');
-            const reflectionModal = document.getElementById('reflection-modal');
-            const reflectionText = document.getElementById('reflection-text');
-            const reflectionSaveBtn = document.getElementById('reflection-save-btn');
-            const reflectionSkipBtn = document.getElementById('reflection-skip-btn');
-            const summaryModal = document.getElementById('summary-modal');
-            const summaryModalTitle = document.getElementById('summary-modal-title');
-            const summaryModalContent = document.getElementById('summary-modal-content');
-            const summaryCloseBtn = document.getElementById('summary-close-btn');
+            // Semua element modal alarm, fokus, dll. Dihapus
 
             // App State
             let currentDate = new Date();
             let selectedDateKey = '';
             let appData = JSON.parse(localStorage.getItem('jadwalinDataV2')) || {};
-            let activeAlarm = null;
-            let alarmInterval;
+            // State alarm Dihapus
             let audioCtx;
 
             const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -305,8 +214,9 @@
                     dayEl.dataset.dateKey = dayKey;
 
                     const dayData = appData[dayKey];
-                    if (dayData && ((dayData.schedule && dayData.schedule.length > 0) || (dayData.expenses && dayData.expenses.items.length > 0))) {
-                        const dotColor = (dayData.schedule && dayData.schedule.length > 0) ? 'bg-green-500' : 'bg-yellow-500';
+                    // Logika dot disederhanakan hanya untuk pengeluaran
+                    if (dayData && (dayData.expenses && dayData.expenses.items.length > 0)) {
+                        const dotColor = 'bg-yellow-500'; // Hanya warna kuning untuk pengeluaran
                         dayEl.innerHTML += `<span class="has-event-dot ${dotColor}"></span>`;
                     }
                     
@@ -320,47 +230,15 @@
                 selectedDateKey = dateKey;
                 const [year, month, day] = dateKey.split('-');
                 modalDateEl.textContent = `${day} ${months[parseInt(month) - 1]} ${year}`;
-                switchTab('jadwal');
-                renderSchedule();
+                // Panggilan switchTab() and renderSchedule() Dihapus
                 renderExpenses();
                 detailsModal.classList.remove('hidden');
             };
             const closeModal = () => { detailsModal.classList.add('hidden'); renderCalendar(); };
-            const switchTab = (tabName) => {
-                tabContents.forEach(content => content.classList.add('hidden'));
-                document.getElementById(`${tabName}-content`).classList.remove('hidden');
-                tabButtons.forEach(button => {
-                    button.classList.remove('tab-active');
-                    if (button.dataset.tab === tabName) button.classList.add('tab-active');
-                });
-            };
-            const renderSchedule = () => {
-                scheduleList.innerHTML = '';
-                if (!appData[selectedDateKey] || !appData[selectedDateKey].schedule) return;
-                const sortedSchedule = appData[selectedDateKey].schedule.sort((a,b) => a.time.localeCompare(b.time));
-                sortedSchedule.forEach(item => {
-                    const li = document.createElement('li');
-                    li.className = `flex justify-between items-center p-3 rounded-lg ${item.completed ? 'bg-green-100 text-gray-500 line-through' : 'bg-gray-100'}`;
-                    li.innerHTML = `<div class="flex items-center">${item.completed ? '<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" /></svg>' : ''}<div><span class="font-semibold">${item.time}</span><span class="ml-3">${item.desc}</span></div></div><button data-id="${item.id}" class="delete-schedule-btn text-red-400 hover:text-red-600 p-1"><svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" /></svg></button>`;
-                    scheduleList.appendChild(li);
-                });
-            };
-            const handleAddSchedule = (e) => {
-                e.preventDefault();
-                if (!appData[selectedDateKey]) appData[selectedDateKey] = {};
-                if (!appData[selectedDateKey].schedule) appData[selectedDateKey].schedule = [];
-                appData[selectedDateKey].schedule.push({id: Date.now(), time: scheduleTimeInput.value, desc: scheduleDescInput.value.trim(), completed: false, snoozeCount: 0, snoozeUntil: null, reflection: ''});
-                saveData();
-                renderSchedule();
-                scheduleForm.reset();
-            };
-            const handleDeleteSchedule = (e) => {
-                if (!e.target.closest('.delete-schedule-btn')) return;
-                const id = parseInt(e.target.closest('.delete-schedule-btn').dataset.id);
-                appData[selectedDateKey].schedule = appData[selectedDateKey].schedule.filter(item => item.id !== id);
-                saveData();
-                renderSchedule();
-            };
+            // Fungsi switchTab Dihapus
+            // Fungsi renderSchedule Dihapus
+            // Fungsi handleAddSchedule Dihapus
+            // Fungsi handleDeleteSchedule Dihapus
             
             // PERUBAHAN 5: Memperbarui fungsi renderExpenses
             const renderExpenses = () => {
@@ -456,7 +334,7 @@
                 renderExpenses();
             };
 
-            // Fungsi ini sekarang mengatur ANGGARAN GLOBAL
+            // Fungsi handleSetGlobalBudget tetap ada
             const handleSetGlobalBudget = () => {
                 const funds = parseInt(globalBudgetInput.value);
                 appData.globalBudget = isNaN(funds) || funds < 0 ? 0 : funds;
@@ -472,110 +350,26 @@
                 renderExpenses(); // Re-render akan menghitung ulang sisa global
             };
             
-            const playAlarmSound = () => {
-                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioCtx.createOscillator();
-                const gainNode = audioCtx.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioCtx.destination);
-                oscillator.type = 'sine';
-                oscillator.frequency.setValueAtTime(880, audioCtx.currentTime);
-                gainNode.gain.setValueAtTime(0.5, audioCtx.currentTime);
-                oscillator.start();
-                setTimeout(() => oscillator.stop(), 150);
-                setTimeout(() => { oscillator.start(); setTimeout(() => oscillator.stop(), 150); }, 300);
-            };
-            const checkAlarms = () => {
-                const now = new Date();
-                const todayKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
-                const todaySchedule = appData[todayKey]?.schedule;
-                if (!todaySchedule) return;
-                const [currentHour, currentMinute] = [now.getHours(), now.getMinutes()];
-                for (const task of todaySchedule) {
-                    if (task.completed || (activeAlarm && activeAlarm.id === task.id)) continue;
-                    const [taskHour, taskMinute] = task.time.split(':').map(Number);
-                    const isTime = currentHour === taskHour && currentMinute === taskMinute;
-                    const isSnoozeOver = task.snoozeUntil && now.getTime() >= task.snoozeUntil;
-                    if (isTime || isSnoozeOver) { task.snoozeUntil = null; triggerAlarm(task, todayKey); break; }
-                }
-            };
-            const triggerAlarm = (task, dateKey) => {
-                activeAlarm = { ...task, dateKey };
-                alarmTaskEl.textContent = task.desc;
-                alarmSkipBtn.classList.toggle('hidden', task.snoozeCount < 2);
-                alarmModal.classList.remove('hidden');
-                playAlarmSound();
-            };
-            const showMotivationalMessage = (message) => {
-                motivationalText.textContent = message;
-                motivationalPopup.classList.remove('hidden');
-                setTimeout(() => motivationalPopup.classList.add('hidden'), 2500);
-            };
-            const handleAlarmDo = () => { alarmModal.classList.add('hidden'); focusTaskName.textContent = activeAlarm.desc; focusModeScreen.classList.remove('hidden'); };
-            const handleAlarmSnooze = () => { alarmModal.classList.add('hidden'); snoozePromptModal.classList.remove('hidden'); };
-            const handleSnoozeConfirm = () => {
-                const minutes = parseInt(snoozeMinutesInput.value) || 10;
-                const taskIndex = appData[activeAlarm.dateKey].schedule.findIndex(t => t.id === activeAlarm.id);
-                if (taskIndex > -1) { appData[activeAlarm.dateKey].schedule[taskIndex].snoozeCount++; appData[activeAlarm.dateKey].schedule[taskIndex].snoozeUntil = Date.now() + minutes * 60 * 1000; saveData(); }
-                snoozePromptModal.classList.add('hidden'); activeAlarm = null; showMotivationalMessage("Oke, saya ingatkan lagi nanti!");
-            };
-            const handleAlarmSkip = () => {
-                const taskIndex = appData[activeAlarm.dateKey].schedule.findIndex(t => t.id === activeAlarm.id);
-                if (taskIndex > -1) appData[activeAlarm.dateKey].schedule[taskIndex].completed = true; saveData(); alarmModal.classList.add('hidden'); activeAlarm = null; showMotivationalMessage("Baiklah, semoga besok bisa dilakukan ya!");
-            };
-            const handleFocusStop = () => { focusModeScreen.classList.add('hidden'); reflectionModal.classList.remove('hidden'); };
-            const completeTaskAndReflect = (reflectionNote = '') => {
-                const taskIndex = appData[activeAlarm.dateKey].schedule.findIndex(t => t.id === activeAlarm.id);
-                if (taskIndex > -1) { appData[activeAlarm.dateKey].schedule[taskIndex].completed = true; appData[activeAlarm.dateKey].schedule[taskIndex].reflection = reflectionNote; saveData(); }
-                reflectionText.value = ''; reflectionModal.classList.add('hidden'); activeAlarm = null; showMotivationalMessage("Selesai! Lanjut ke kegiatan berikutnya!");
-            };
-            const renderDailySummary = (dateKey) => {
-                const [year, month, day] = dateKey.split('-');
-                summaryModalTitle.textContent = `Ringkasan untuk ${day} ${months[parseInt(month) - 1]} ${year}`;
-                const dayData = appData[dateKey];
-                let contentHTML = '<div class="space-y-6">';
-                const completedTasks = dayData?.schedule?.filter(t => t.completed && t.desc) || [];
-                contentHTML += '<div><h4 class="font-bold text-lg mb-2 text-green-700">Aktivitas Selesai</h4>';
-                if (completedTasks.length > 0) {
-                    contentHTML += '<ul class="space-y-3">';
-                    completedTasks.forEach(task => { contentHTML += `<li class="p-3 bg-gray-50 rounded-lg"><p class="font-semibold">${task.desc}</p>${task.reflection ? `<p class="text-sm text-gray-600 mt-1 pl-4 border-l-2 border-green-200"><em>"${task.reflection}"</em></p>` : ''}</li>`; });
-                    contentHTML += '</ul>';
-                } else { contentHTML += '<p class="text-gray-500">Belum ada aktivitas yang selesai hari ini.</p>'; }
-                contentHTML += '</div>';
-                const expenses = dayData?.expenses;
-                let totalExpense = 0;
-                expenses?.items.forEach(item => totalExpense += item.amount);
-                contentHTML += '<div><h4 class="font-bold text-lg mb-2 text-yellow-700">Ringkasan Keuangan</h4>';
-                if (totalExpense > 0) { contentHTML += `<p class="text-gray-600">Total pengeluaran hari ini: <strong class="text-xl">Rp ${totalExpense.toLocaleString('id-ID')}</strong></p>`; } else { contentHTML += '<p class="text-gray-500">Tidak ada pengeluaran hari ini.</p>'; }
-                contentHTML += '</div></div>';
-                summaryModalContent.innerHTML = contentHTML;
-            };
+            // Semua fungsi terkait alarm, fokus, motivasi, dan ringkasan Dihapus
+            // (playAlarmSound, checkAlarms, triggerAlarm, showMotivationalMessage, handleAlarmDo,
+            // handleAlarmSnooze, handleSnoozeConfirm, handleAlarmSkip, handleFocusStop, 
+            // completeTaskAndReflect, renderDailySummary)
 
             prevMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() - 1); renderCalendar(); });
             nextMonthBtn.addEventListener('click', () => { currentDate.setMonth(currentDate.getMonth() + 1); renderCalendar(); });
             closeModalBtn.addEventListener('click', closeModal);
             detailsModal.addEventListener('click', (e) => { if (e.target === detailsModal) closeModal(); });
-            tabButtons.forEach(button => button.addEventListener('click', () => switchTab(button.dataset.tab)));
-            scheduleForm.addEventListener('submit', handleAddSchedule);
-            scheduleList.addEventListener('click', handleDeleteSchedule);
+            // Event listener untuk Tab Dihapus
+            // Event listener untuk Jadwal Dihapus
             expenseForm.addEventListener('submit', handleAddExpense);
             dailyLimitInput.addEventListener('change', handleSetLimit);
             // PERUBAHAN 7: Event Listener untuk input dana global
             globalBudgetInput.addEventListener('change', handleSetGlobalBudget);
             expenseList.addEventListener('click', handleDeleteExpense);
-            alarmDoBtn.addEventListener('click', handleAlarmDo);
-            alarmSnoozeBtn.addEventListener('click', handleAlarmSnooze);
-            alarmSkipBtn.addEventListener('click', handleAlarmSkip);
-            snoozeConfirmBtn.addEventListener('click', handleSnoozeConfirm);
-            focusStopBtn.addEventListener('click', handleFocusStop);
-            reflectionSaveBtn.addEventListener('click', () => completeTaskAndReflect(reflectionText.value.trim()));
-            reflectionSkipBtn.addEventListener('click', () => completeTaskAndReflect());
-            showSummaryBtn.addEventListener('click', () => { renderDailySummary(selectedDateKey); summaryModal.classList.remove('hidden'); });
-            summaryCloseBtn.addEventListener('click', () => summaryModal.classList.add('hidden'));
-            summaryModal.addEventListener('click', (e) => { if (e.target === summaryModal) summaryModal.classList.add('hidden'); });
+            // Event listener untuk alarm, fokus, refleksi, dan ringkasan Dihapus
 
             renderCalendar();
-            alarmInterval = setInterval(checkAlarms, 5000); 
+            // Interval alarm Dihapus
         });
     </script>
 </body>
